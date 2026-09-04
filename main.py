@@ -7,7 +7,6 @@ from models.User import User
 from models.StudyDeck import StudyDeck
 from models.DeckShare import ShareDeck
 
-from routes.ai_routes import router as ai_router
 from routes.user_routes import router as user_router
 from routes.study_deck_routes import router as study_deck_router
 from routes.share_deck_routes import router as share_deck_router
@@ -43,8 +42,6 @@ def root():
 
 
 app.include_router(auth_router)
-
-app.include_router(ai_router)
 
 app.include_router(study_deck_router)
 
