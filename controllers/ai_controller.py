@@ -20,13 +20,6 @@ async def process_upload(file: UploadFile, user_id: int, db):
 
     storage_path = f"user_{user_id}/{storage_filename}"
 
-    # Upload to Supabase
-    await upload_file(
-        file_content=file_content,
-        storage_path=storage_path,
-        content_type=file.content_type or "application/octet-stream",
-    )
-
     # Extract
     text = await extract_document(file)
 
