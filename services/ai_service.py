@@ -78,7 +78,7 @@ Do not use an external definition if the material does not provide enough inform
 
 ### 4. Multiple-Choice Quiz
 
-Create multiple-choice questions based ONLY on the provided material.
+Create 10 multiple-choice questions based ONLY on the provided material.
 
 Requirements:
 
