@@ -3,8 +3,11 @@ import os
 import tempfile
 import uuid
 
+from sqlalchemy.orm import Session
+
 from utils.auth_dependency import get_current_user
 
+from database import get_db
 
 from controllers.ai_controller import process_upload
 
