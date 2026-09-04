@@ -1,5 +1,4 @@
 from fastapi import UploadFile
-from routes.upload_routes import upload_file
 from services.document_service import extract_document
 from services.ai_service import generate_study_material
 from services.ai_service import test_ai

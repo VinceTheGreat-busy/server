@@ -1,7 +1,4 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
-import os
-import tempfile
-import uuid
 
 from sqlalchemy.orm import Session
 
