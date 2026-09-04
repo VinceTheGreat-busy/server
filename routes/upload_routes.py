@@ -5,7 +5,6 @@ import uuid
 
 from utils.auth_dependency import get_current_user
 
-from services.document_service import extract_pdf, extract_docx, extract_pptx
 
 from controllers.ai_controller import process_upload
 
