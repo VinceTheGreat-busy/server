@@ -1,16 +1,12 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
-
 from sqlalchemy.orm import Session
-
-from utils.auth_dependency import get_current_user
+import os
 
 from database import get_db
+from models.User import User
+from utils.auth_dependency import get_current_user
 
 from controllers.ai_controller import process_upload
-
-from services.supabase_service import supabase, SUPABASE_BUCKET
-
-from models.User import User
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
@@ -23,11 +19,9 @@ async def upload_file(
 ):
     allowed_extensions = [".pdf", ".docx", ".pptx"]
 
-    import os
+    file_extension = os.path.splitext(file.filename)[1].lower()
 
-    extension = os.path.splitext(file.filename)[1].lower()
-
-    if extension not in allowed_extensions:
+    if file_extension not in allowed_extensions:
         raise HTTPException(
             status_code=400, detail="Only PDF, DOCX, and PPTX files are allowed."
         )
@@ -35,9 +29,9 @@ async def upload_file(
     try:
         deck = await process_upload(file=file, user_id=current_user.id, db=db)
 
-        return deck
+        return {"message": "Study deck created successfully.", "deck": deck}
 
     except Exception as e:
         print("Upload error:", e)
 
-        raise HTTPException(status_code=500, detail="Failed to process uploaded file.")
+        raise HTTPException(status_code=500, detail=str(e))

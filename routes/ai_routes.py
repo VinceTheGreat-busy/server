@@ -1,9 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Depends
 from sqlalchemy.orm import Session
 
-from controllers.ai_controller import run_ai_test, process_upload
-from database import get_db
-from auth import get_current_user
+from controllers.ai_controller import run_ai_test
 from models.User import User
 
 router = APIRouter(prefix="/api", tags=["AI"])
