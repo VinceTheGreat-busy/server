@@ -1,8 +1,12 @@
 from fastapi import UploadFile
+from server.routes.upload_routes import upload_file
 from services.document_service import extract_document
 from services.ai_service import generate_study_material
 from services.ai_service import test_ai
 from controllers.study_deck_controller import create_deck
+
+import os
+import uuid
 
 
 async def process_upload(file: UploadFile, user_id: int, db):
@@ -18,7 +22,7 @@ async def process_upload(file: UploadFile, user_id: int, db):
     storage_path = f"user_{user_id}/{storage_filename}"
 
     # Upload to Supabase
-    upload_file(
+    await upload_file(
         file_content=file_content,
         storage_path=storage_path,
         content_type=file.content_type or "application/octet-stream",
