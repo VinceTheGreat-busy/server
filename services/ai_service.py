@@ -39,7 +39,7 @@ Analyze the educational material and generate the following four sections:
 
 ### 1. Study Notes
 
-Create clear and organized study notes covering the important concepts from the material.
+Create at least 500 words of clear and organized study notes covering the important concepts from the material.
 
 Requirements:
 
