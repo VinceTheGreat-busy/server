@@ -7,7 +7,7 @@ from controllers.study_deck_controller import create_deck
 
 async def process_upload(file: UploadFile, user_id: int, db):
 
-    # Read file
+    # Read fil
     file_content = await file.read()
 
     # Generate storage path
