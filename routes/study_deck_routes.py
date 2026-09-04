@@ -69,5 +69,9 @@ def update_deck(deck_id: int, deck_data: dict, db: Session = Depends(get_db)):
 
 
 @router.delete("/{deck_id}")
-def remove_deck(deck_id: int, db: Session = Depends(get_db)):
-    return delete_deck(db, deck_id)
+def remove_deck(
+    deck_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return delete_deck(db=db, deck_id=deck_id)

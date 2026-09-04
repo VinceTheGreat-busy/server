@@ -99,16 +99,8 @@ def edit_deck(db: Session, deck_id: int, deck_data: dict):
     return deck
 
 
-def delete_deck(
-    deck_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    deck = (
-        db.query(StudyDeck)
-        .filter(StudyDeck.id == deck_id, StudyDeck.user_id == current_user.id)
-        .first()
-    )
+def delete_deck(db: Session, deck_id: int):
+    deck = db.query(StudyDeck).filter(StudyDeck.id == deck_id).first()
 
     if not deck:
         raise HTTPException(status_code=404, detail="Deck not found.")
