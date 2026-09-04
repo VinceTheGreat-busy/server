@@ -1,32 +1,26 @@
 from fastapi import UploadFile
+from sqlalchemy.orm import Session
+
 from services.document_service import extract_document
 from services.ai_service import generate_study_material
-from services.ai_service import test_ai
 from controllers.study_deck_controller import create_deck
 
-import os
-import uuid
 
+async def process_upload(
+    file: UploadFile, file_bytes: bytes, user_id: int, db: Session
+):
+    # Extract document using the bytes we already read
+    text = await extract_document(file.filename, file_bytes)
 
-async def process_upload(file: UploadFile, user_id: int, db):
+    if not text or not text.strip():
+        raise ValueError("Could not extract text from the document.")
 
-    # Read fil
-    file_content = await file.read()
+    print(f"Extracted {len(text)} characters " f"from {file.filename}")
 
-    # Generate storage path
-    extension = os.path.splitext(file.filename)[1].lower()
-
-    storage_filename = f"{uuid.uuid4()}{extension}"
-
-    storage_path = f"user_{user_id}/{storage_filename}"
-
-    # Extract
-    text = await extract_document(file)
-
-    # Gemini
+    # Send extracted text to Gemini
     study_material = generate_study_material(text)
 
-    # Create deck
+    # Create StudyDeck
     deck = create_deck(
         db=db,
         user_id=user_id,
@@ -39,8 +33,3 @@ async def process_upload(file: UploadFile, user_id: int, db):
     )
 
     return deck
-
-
-def run_ai_test():
-
-    return test_ai()
