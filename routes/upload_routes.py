@@ -1,16 +1,21 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 import shutil
 import os
 
+from utils.auth_dependency import get_current_user
+
 from services.document_service import extract_pdf, extract_docx, extract_pptx
+from models.User import User
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
 
 @router.post("/")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...), current_user: User = Depends(get_current_user)):
 
     allowed_extensions = [".pdf", ".docx", ".pptx"]
+    
+    
 
     file_extension = os.path.splitext(file.filename)[1].lower()
 
