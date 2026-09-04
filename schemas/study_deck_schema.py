@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Any
+from typing import Any, Optional
 
 
 class StudyDeckCreate(BaseModel):
@@ -13,8 +13,8 @@ class StudyDeckCreate(BaseModel):
 
 
 class StudyDeckUpdate(BaseModel):
-    title: str | None = None
-    description: str | None = None
+    title: Optional[str] = None
+    description: Optional[str] = None
     notes: list[Any] | None = None
     key_points: list[Any] | None = None
     important_words: list[Any] | None = None

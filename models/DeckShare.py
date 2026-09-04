@@ -4,7 +4,7 @@ from database import Base
 
 
 class ShareDeck(Base):
-    __tablename__ = "share_decks"
+    __tablename__ = "deck_shares"
 
     id = Column(Integer, primary_key=True, index=True)
 

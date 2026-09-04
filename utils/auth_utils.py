@@ -17,7 +17,7 @@ secret = os.getenv("SECRET_KEY")
 # JWT
 SECRET_KEY = secret
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 
 
 
 def hash_password(password: str) -> str:

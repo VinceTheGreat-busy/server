@@ -5,7 +5,7 @@ import os
 
 load_dotenv()
 
-DB = os.getenv("DB")
+DB = os.getenv("DB_SUPABASE")
 
 engine = create_engine(DB)
 

@@ -1,5 +1,10 @@
+from database import get_db
+from models import User
+from schemas.study_deck_schema import StudyDeckUpdate
+from utils.auth_dependency import get_current_user
 from sqlalchemy.orm import Session
 from models.StudyDeck import StudyDeck
+from fastapi import Depends, HTTPException
 
 
 def get_all_decks(db: Session):
@@ -11,12 +16,8 @@ def get_deck(db: Session, deck_id: int):
 
 
 def get_user_decks(db: Session, user_id: int):
-    return (
-        db.query(StudyDeck)
-        .filter(StudyDeck.user_id == user_id)
-        .all()
-    )
-    
+    return db.query(StudyDeck).filter(StudyDeck.user_id == user_id).all()
+
 
 def create_deck(
     db: Session,
@@ -48,7 +49,34 @@ def create_deck(
     return deck
 
 
-def update_deck(db: Session, deck_id: int, deck_data: dict):
+def update_deck(
+    deck_id: int,
+    deck_data: StudyDeckUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    deck = (
+        db.query(StudyDeck)
+        .filter(StudyDeck.id == deck_id, StudyDeck.user_id == current_user.id)
+        .first()
+    )
+
+    if not deck:
+        raise HTTPException(status_code=404, detail="Deck not found.")
+
+    if deck_data.title is not None:
+        deck.title = deck_data.title
+
+    if deck_data.description is not None:
+        deck.description = deck_data.description
+
+    db.commit()
+    db.refresh(deck)
+
+    return deck
+
+
+def edit_deck(db: Session, deck_id: int, deck_data: dict):
     deck = get_deck(db, deck_id)
 
     allowed_fields = [
@@ -71,10 +99,21 @@ def update_deck(db: Session, deck_id: int, deck_data: dict):
     return deck
 
 
-def delete_deck(db: Session, deck_id: int):
-    deck = get_deck(db, deck_id)
+def delete_deck(
+    deck_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    deck = (
+        db.query(StudyDeck)
+        .filter(StudyDeck.id == deck_id, StudyDeck.user_id == current_user.id)
+        .first()
+    )
+
+    if not deck:
+        raise HTTPException(status_code=404, detail="Deck not found.")
 
     db.delete(deck)
     db.commit()
 
-    return {"message": "Study deck deleted successfully"}
+    return {"message": "Deck deleted successfully."}

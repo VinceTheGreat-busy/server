@@ -17,16 +17,10 @@ def get_current_user(
 ):
     token = credentials.credentials
 
-    print("TOKEN:", token)
-
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
-        print("PAYLOAD:", payload)
-
         user_id = payload.get("sub")
-
-        print("USER ID:", user_id)
 
         if user_id is None:
             raise HTTPException(status_code=401, detail="Token has no user ID")
@@ -37,13 +31,10 @@ def get_current_user(
             raise HTTPException(status_code=401, detail="Invalid user ID in token")
 
     except JWTError as e:
-        print("JWT ERROR:", e)
 
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
     user = db.query(User).filter(User.id == user_id).first()
-
-    print("USER:", user)
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

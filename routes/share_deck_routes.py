@@ -1,4 +1,7 @@
 from fastapi import APIRouter, Depends
+from models.DeckShare import ShareDeck
+from models.User import User
+from utils.auth_dependency import get_current_user
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -20,6 +23,20 @@ def create_share(share_data: dict, db: Session = Depends(get_db)):
         deck_id=share_data["deck_id"],
         shared_with_user_id=share_data["shared_with_user_id"],
     )
+
+
+@router.get("/")
+def get_shared_decks(
+    db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+
+    shares = (
+        db.query(ShareDeck)
+        .filter(ShareDeck.shared_with_user_id == current_user.id)
+        .all()
+    )
+
+    return shares
 
 
 @router.get("/user/{user_id}")
